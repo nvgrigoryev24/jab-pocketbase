@@ -147,20 +147,22 @@ docker-compose up --build -d
 ### Railway развертывание (Production)
 1. **Установите Railway CLI:**
    ```bash
-   npm install -g @railway/cli
+   npm install @railway/cli
    ```
 
 2. **Войдите в аккаунт:**
    ```bash
-   railway login
+   npx railway login
    ```
 
 3. **Деплой:**
    ```bash
-   railway up
+   npx railway up
    ```
 
 4. **Настройте переменные окружения в панели Railway**
+
+> **Примечание:** Railway CLI установлен локально в проект. Подробные инструкции см. в [RAILWAY_SETUP.md](./RAILWAY_SETUP.md)
 
 ### Подробное руководство
 См. [DEPLOYMENT.md](./DEPLOYMENT.md) для детальных инструкций по развертыванию.
