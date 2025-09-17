@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # PocketBase Backend
+  pocketbase:
+    build:
+      context: .
+      dockerfile: Dockerfile.pocketbase
+    container_name: jab-pocketbase
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    volumes:
+      - pocketbase_data:/pocketbase/pb_data
+      - pocketbase_migrations:/pocketbase/pb_migrations
+    environment:
+      - PB_DATA_DIR=/pocketbase/pb_data
+      - PORT=8090
+      - PB_LOG_LEVEL=info
+    networks:
+      - jab-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8090/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  pocketbase_data:
+    driver: local
+  pocketbase_migrations:
+    driver: local
+
+networks:
+  jab-network:
+    driver: bridge
+

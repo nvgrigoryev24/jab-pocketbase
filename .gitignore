@@ -1,0 +1,29 @@
+# PocketBase данные (не коммитим в git)
+pb_data/
+
+# Временные файлы
+*.tmp
+*.log
+*.pid
+
+# OS файлы
+.DS_Store
+Thumbs.db
+
+# IDE файлы
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker volumes
+docker-volumes/
+
+# Backup файлы
+*.backup
+*.bak
+
+# Логи
+logs/
+*.log
+

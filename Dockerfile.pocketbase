@@ -1,0 +1,38 @@
+# Dockerfile для PocketBase (Railway оптимизированный)
+FROM alpine:latest
+
+# Устанавливаем необходимые пакеты
+RUN apk add --no-cache \
+    ca-certificates \
+    unzip \
+    wget \
+    curl
+
+# Создаем пользователя для PocketBase
+RUN addgroup -g 1001 pocketbase && \
+    adduser -D -s /bin/sh -u 1001 -G pocketbase pocketbase
+
+# Создаем директории
+RUN mkdir -p /pocketbase/pb_data && \
+    chown -R pocketbase:pocketbase /pocketbase
+
+# Копируем PocketBase бинарник
+COPY --chown=pocketbase:pocketbase pocketbase /pocketbase/pocketbase
+RUN chmod +x /pocketbase/pocketbase
+
+# Копируем миграции (данные не копируем для production)
+COPY --chown=pocketbase:pocketbase pb_migrations/ /pocketbase/pb_migrations/
+
+# Переключаемся на пользователя pocketbase
+USER pocketbase
+
+WORKDIR /pocketbase
+
+# Открываем порт (Railway использует переменную PORT)
+EXPOSE $PORT
+
+# Создаем директорию для данных если её нет
+RUN mkdir -p /pocketbase/pb_data
+
+# Запускаем PocketBase с поддержкой Railway
+CMD ["./pocketbase", "serve", "--http=0.0.0.0:$PORT"]
