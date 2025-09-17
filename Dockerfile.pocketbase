@@ -29,10 +29,17 @@ USER pocketbase
 WORKDIR /pocketbase
 
 # Открываем порт (Railway использует переменную PORT)
-EXPOSE $PORT
+EXPOSE 8090
 
 # Создаем директорию для данных если её нет
 RUN mkdir -p /pocketbase/pb_data
 
-# Запускаем PocketBase с поддержкой Railway
-CMD ["./pocketbase", "serve", "--http=0.0.0.0:$PORT"]
+# Создаем скрипт запуска для правильной обработки PORT
+RUN echo '#!/bin/sh' > /pocketbase/start.sh && \
+    echo 'PORT=${PORT:-8090}' >> /pocketbase/start.sh && \
+    echo 'echo "Starting PocketBase on port $PORT"' >> /pocketbase/start.sh && \
+    echo './pocketbase serve --http=0.0.0.0:$PORT' >> /pocketbase/start.sh && \
+    chmod +x /pocketbase/start.sh
+
+# Запускаем PocketBase через скрипт
+CMD ["/pocketbase/start.sh"]
